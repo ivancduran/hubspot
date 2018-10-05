@@ -82,3 +82,25 @@ func (h *Deal) Update(Id string) {
 	x, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("Hubspot body", string(x), resp)
 }
+
+func (h *Deal) GetPipeline(Id string) {
+	const (
+		hubspotUrl = "http://api.hubapi.com/deals/v1/pipelines?hapikey=%s"
+	)
+
+	url := fmt.Sprintf(hubspotUrl, Id, h.APIKey)
+
+	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	x, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("Hubspot pipelines", string(x), resp)
+}
